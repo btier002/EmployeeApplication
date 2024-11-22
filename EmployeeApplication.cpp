@@ -12,6 +12,8 @@
 #include <regex>
 #include <sstream>
 
+#include "employee.h"
+
 using namespace std;
 
 // Reads the employee log file
@@ -33,7 +35,9 @@ std::unordered_map<std::string, std::string> readEmployeeLogs(const std::string&
 	return employeeMap;
 }
 
-
+void registerFunc() {
+	// Register function
+}
 
 int main() {
 	std::unordered_map<std::string, std::string> employeeMap;
