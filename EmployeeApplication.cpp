@@ -11,6 +11,8 @@
 #include <string>
 #include <regex>
 #include <sstream>
+#include <time.h>
+
 
 #include "employee.h"
 
@@ -40,9 +42,25 @@ void registerFunc() {
 }
 
 int main() {
+	int stateMachine1 = 0;
+	int stateMachine2 = 0;
 	std::unordered_map<std::string, std::string> employeeMap;
 	// Starting a while true to then look for commands entered through the line.
-	while (true) {
+	while (stateMachine1 == 0 && stateMachine2==0) {
+		string command;
+		cout << "Awaiting initial command (timeclock/admin)";
+		cin >> command;
+		if (command == "timeclock") {
+			stateMachine1 = 1;
+			break;
+		}
+		if (command == "admin") {
+			stateMachine2 == 1;
+			break;
+		}
+		employeeMap = readEmployeeLogs("employeelog.txt");
+	}
+	while (stateMachine1==1 && stateMachine2==0) {
 		
 		string command;
 		cout << "Awaiting a start command (login,register,logout,)";
@@ -74,6 +92,12 @@ int main() {
 			//User enters login code, if login code matches what is in the file then user is logged on, else it will give error.
 
 		}
+
+	}
+
+	// Admin control
+	while (stateMachine1 == 0 && stateMachine2 == 1) {
+		return 0;
 	}
 
 	return 0;
