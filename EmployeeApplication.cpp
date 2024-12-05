@@ -26,10 +26,12 @@ std::unordered_map<std::string, std::string> readEmployeeLogs(const std::string&
 
 	while (std::getline(file, line)) {
 		std::stringstream ss(line);
-		std::string name, address, phoneNumber, age, companyPosition, userID, hireDate, pay; // Reads the csv file containing these / 7 different attributes
+		std::string name, userID, address, phoneNumber, age, companyPosition, hireDate, pay, hourlyPay; // Reads the csv file containing these / 7 different attributes
 		// Do , ',', except for last getline
 		std::getline(ss, userID, ',');
 		std::getline(ss, name, ',');
+		std::getline(ss, phoneNumber, ',');
+
 		// Etc...
 
 		// Then normalize phone number or other things...
@@ -37,8 +39,17 @@ std::unordered_map<std::string, std::string> readEmployeeLogs(const std::string&
 	return employeeMap;
 }
 
-void registerFunc() {
-	// Register function
+std::string generateUniqueID(std::unordered_map<std::string, std::string>& employeeMap) {
+	std::random_device rd;  // Seed for random number generator
+	std::mt19937 gen(rd()); // Mersenne Twister RNG
+	std::uniform_int_distribution<long long> dist(1000000000LL, 9999999999LL); // Range for 10-digit numbers
+
+	std::string uniqueID;
+	do {
+		uniqueID = std::to_string(dist(gen));
+	} while (employeeMap.find(uniqueID) != employeeMap.end());
+
+	return uniqueID;
 }
 
 int main() {
@@ -48,17 +59,20 @@ int main() {
 	// Starting a while true to then look for commands entered through the line.
 	while (stateMachine1 == 0 && stateMachine2==0) {
 		string command;
-		cout << "Awaiting initial command (timeclock/admin)";
+		cout << "Awaiting initial command (timeclock/admin,exit)";
 		cin >> command;
 		if (command == "timeclock") {
 			stateMachine1 = 1;
 			break;
 		}
 		if (command == "admin") {
-			stateMachine2 == 1;
+			stateMachine2 = 1;
 			break;
 		}
 		employeeMap = readEmployeeLogs("employeelog.txt");
+		if (command == "exit") {
+			break;
+		}
 	}
 	while (stateMachine1==1 && stateMachine2==0) {
 		
@@ -74,30 +88,41 @@ int main() {
 		}
 		// Register
 		if (command == "register") {
-			string name;
-			string uniqueID;
-			fstream fout;
-			fout.open("EmployeeLogs.txt", ios::out | ios::app);
-
 			// Generates userID
-			
+			std::fstream fout("EmployeeLogs.txt", std::ios::out | std::ios::app);  // Declare fout once
+			if (!fout) {
+				std::cerr << "Error: Unable to open the file for writing." << std::endl;
+				continue;
+			}
 
+			string name;
+			cout << "Enter your Full Name: ";
+			std::getline(cin >> std::ws, name);  // Ensures entire name is captured
 
-			// Entering name
-			cout << "Enter your FullName: ";
-			cin >> name;
-			fout << name << ",";
+			std::string uniqueID = generateUniqueID(employeeMap);
+
+			// Write to the file
+			fout << name << "," << uniqueID << "\n";
+
+			fout.close();  // Close the file after writing
+			cout << "Employee registered successfully with ID: " << uniqueID << endl;
 
 		} else if (command == "login") {
 			//User enters login code, if login code matches what is in the file then user is logged on, else it will give error.
-
+			  
 		}
 
 	}
 
 	// Admin control
 	while (stateMachine1 == 0 && stateMachine2 == 1) {
-		return 0;
+		string command;
+		cout << "Awaiting an admin command(edit, exit)";
+		cin >> command;
+		if (command == "exit") {
+			break;
+		}
+
 	}
 
 	return 0;

@@ -3,7 +3,7 @@
 class Employee {
 private:
 	std::string employeeName, employeeAddress, employeeCompanyPosition, employeeHireDate;
-	std::int16_t employeePay, employeeUserID, employeePhoneNumber, employeeAge;
+	std::int16_t employeePay, employeeUserID, employeePhoneNumber, employeeAge, employeeHourlyPay;
 
 public:
 	// Constructor
@@ -14,6 +14,7 @@ public:
 		employeeHireDate = "";
 		employeePay = 0;
 		employeePhoneNumber = 0;
+		employeeHourlyPay = 0;
 	}
 	// Getter Methods
 	std::string getEmployeeName() {
@@ -46,6 +47,10 @@ public:
 
 	std::int16_t getEmployeePay() {
 		return employeePay;
+	}
+
+	std::int16_t getEmployeeHourlyPay() {
+		return employeeHourlyPay;
 	}
 
 
